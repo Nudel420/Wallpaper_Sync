@@ -33,17 +33,18 @@ std::wstring GetWallpaperPathBasedOnTime() {
     int currentHour = now->tm_hour;
 
     // Determine which wallpaper to use based on the time
-    if (currentHour >= 0 && currentHour < 6) {
-        return L"C:\\Users\\elias\\Wallpaper_Script\\Island1.jpg"; // 0-6 AM
-    } else if (currentHour >= 6 && currentHour < 12) {
-        return L"C:\\Users\\elias\\Wallpaper_Script\\Island2.jpg"; // 6 AM - 12 PM
-    } else if (currentHour >= 12 && currentHour < 18) {
-        return L"C:\\Users\\elias\\Wallpaper_Script\\Island3.jpg"; // 12 PM - 6 PM
+    if (currentHour >= 5 && currentHour < 9) {
+        return L"C:\\Users\\elias\\Wallpaper_Script\\Island1.jpg"; // 05:00 - 09:00
+    } else if (currentHour >= 9 && currentHour < 17) {
+        return L"C:\\Users\\elias\\Wallpaper_Script\\Island2.jpg"; // 09:00 - 17:00
+    } else if (currentHour >= 17 && currentHour < 19) {
+        return L"C:\\Users\\elias\\Wallpaper_Script\\Island3.jpg"; // 17:00 - 19:00
     } else {
-        return L"C:\\Users\\elias\\Wallpaper_Script\\Island4.jpg"; // 6 PM - 12 AM
+        return L"C:\\Users\\elias\\Wallpaper_Script\\Island4.jpg"; // 19:00 - 05:00 
     }
 }
-int main() {
+
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
     CoInitialize(nullptr);
 
     IDesktopWallpaper* pDesktopWallpaper = nullptr;
@@ -56,6 +57,7 @@ int main() {
     if (FAILED(pDesktopWallpaper->GetMonitorDevicePathCount(&monitorCount))) {
         std::wcerr << L"Failed to get monitor count." << std::endl;
         pDesktopWallpaper->Release();
+        CoUninitialize();
         return -1;
     }
 
@@ -67,7 +69,6 @@ int main() {
             std::wcerr << L"Failed to get monitor ID for monitor " << i << L"." << std::endl;
             continue;
         }
-
 
         if (!SetWallpaperForMonitor(wallpaperPath, monitorId)) {
             std::wcerr << L"Failed to set wallpaper for monitor " << i << L"." << std::endl;
